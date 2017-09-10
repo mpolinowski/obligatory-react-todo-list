@@ -1,4 +1,4 @@
-# react-todo-list
+# React-TODO-List
 Every web-dev should have one or two of them on Github ~
 
 
@@ -80,13 +80,16 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 ```
 
-and create the **TodoComponent** written in JSX:
+and create the **TodoComponent** written in JSX - always wrap your HTML into a div container (there must only be one parent tag in each component!):
 
 ```js
 var TodoComponent = React.createClass({
   render: function(){
     return(
-      <h1>Hello World</h1>
+      <div>
+        <h1>Hello World</h1>
+        <p>First React Component</p>
+      </div>
     );
   }
 });
