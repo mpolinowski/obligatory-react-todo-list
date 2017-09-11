@@ -91,7 +91,7 @@ var TodoComponent = React.createClass({
         <p>First React Component</p>
       </div>
     );
-  }
+  } // render
 });
 ```
 
@@ -105,4 +105,135 @@ The id **todo-wrapper** can be referenced inside a div tag in */src/index.html* 
 
 ```
 <div id="todo-wrapper"></div>
+```
+
+
+# Passing Data into Component using Props
+
+For example, we now create a constant with some data strings and pass them into our TodoComponent in */src/app/index.js*:
+
+```js
+const myData = {name:'Stefan Stefanopolos', year:'1922', origin:'Athens, Greece'}
+
+ReactDOM.render(<TodoComponent data={myData}/>, document.getElementById('todo-wrapper'));
+```
+
+And reference this message inside the component itself:
+
+```js
+var TodoComponent = React.createClass({
+  render: function(){
+    return(
+      <div>
+        <ul>
+          <li><strong>Author:</strong> {this.props.data.name}</li>
+          <li><strong>Year:</strong> {this.props.data.year}</li>
+          <li><strong>Location:</strong> {this.props.data.origin}</li>
+        </ul>
+      </div>
+    );
+  } //render
+});
+```
+
+The string will now show up on our page. -> Just a proof of concept /delete
+
+
+# Working with Component State
+
+So far our component only has a render function - we will now add a getInitialState function on top:
+
+```js
+var TodoComponent = React.createClass({
+  getInitialState: function(){
+    return {
+      todos:['Reply Emails', 'Proof-read Printmanuals', 'Generate new Search-Index']
+    }
+  },
+  render: function(){
+    return(
+      <div id="todo-list">
+        <h1>TODO List</h1>
+        <ul>
+          <li>{this.state.todos[0]}</li>
+          <li>{this.state.todos[1]}</li>
+          <li>{this.state.todos[2]}</li>
+        </ul>
+      </div>
+    );
+  } // render
+});
+```
+
+```js
+ReactDOM.render(<TodoComponent />, document.getElementById('todo-wrapper'));
+```
+
+
+# Using setState to change State of a Component
+
+Another proof of concept - will be deleted before the next step.
+
+We want to add a another variable to the InitialState and update this variable after 5 seconds:
+
+```js
+var TodoComponent = React.createClass({
+  getInitialState: function(){
+    return {
+      todos:['Reply Emails', 'Proof-read Printmanuals', 'Generate new Search-Index'],
+      date: '2017-09-11' // InitialState date will be changed after 5s by setTimeout function below
+    }
+  }, //InitialState
+  render: function(){
+    var dater = setTimeout(function(){
+        this.setState({
+          date: '2017-09-12'
+        });
+    }.bind(this), 5000); // Remember to bind 'this' to function!
+    return(
+      <div id="todo-list">
+        <h1>TODO List</h1>
+        <h3>{this.state.date}</h3>
+        <ul>
+          <li>{this.state.todos[0]}</li>
+          <li>{this.state.todos[1]}</li>
+          <li>{this.state.todos[2]}</li>
+        </ul>
+      </div>
+    );
+  } // render
+});
+```
+
+
+# Cycling through data
+
+Usually we do not know how many items are inside the InstialState array - lets write a function that works for any array.length
+
+```js
+var TodoComponent = React.createClass({
+  getInitialState: function(){
+    return {
+      todos:['Reply Emails', 'Proof-read Printmanuals', 'Generate new Search-Index', 'drink a cup of coffee'],
+      date: '2017-09-11'
+    }
+  }, //InitialState
+  render: function(){
+    var todos = this.state.todos; // create a local copy of todos array inside function
+    todos = todos.map(function(item, index){ // put each item from todos array into JSX li-tags
+      return(
+        <li>{item}</li>
+      )
+    });
+    return(
+      <div id="todo-list">
+        <h1>TODO List</h1>
+        <h3>{this.state.date}</h3>
+        <ul>
+          {todos}
+        </ul>
+      </div>
+    ); // we now reference the local todos variable instead of the this.state.todos
+  } // render
+});
 ```
