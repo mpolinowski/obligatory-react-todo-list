@@ -1,8 +1,19 @@
 # React-TODO-List
 Every web-dev should have one or two of them on Github ~
 
+01. [Install react, react-dom and babel](#01-install-react-react-dom-and-babel)
+02. [Create our first React Component](#02-create-our-first-react-component)
+03. [Passing Data into Component using Props](#03-passing-data-into-component-using-props)
+04. [Working with Component State](#04-working-with-component-state)
+05. [Using setState to change State of a Component](#05-using-setstate-to-change-state-of-a-component)
+06. [Cycling through data](#06-cycling-through-data)
+07. [Nesting Components](#07-nesting-components)
+08. [Handling Events](#08-handling-events)
+09. [Modularize](#09-modularize)
+10. [Adding styles with Webpack](#10-adding-styles-with-webpack)
 
-## Install react, react-dom and babel
+
+## 01 Install react, react-dom and babel
 All dependencies will be installed by npm after we initialized the repo (just confirm all defaults):
 
 ```
@@ -71,7 +82,7 @@ Add the following npm scripts to package.json to be able to start the webpack-se
 *npm start* will now trigger *npm run build* - where build fires up our webpack-server on **--port 1234**. The server expects a *index.js* file in the root directory. **--content-base src/** points it to our /src instead. **--inline** and **--hot** enables hot reloading.
 
 
-## Create our first React Component
+## 02 Create our first React Component
 
 Require react and react-dom to */src/app/index.js* :
 
@@ -108,7 +119,7 @@ The id **todo-wrapper** can be referenced inside a div tag in */src/index.html* 
 ```
 
 
-## Passing Data into Component using Props
+## 03 Passing Data into Component using Props
 
 For example, we now create a constant with some data strings and pass them into our TodoComponent in */src/app/index.js*:
 
@@ -139,7 +150,7 @@ var TodoComponent = React.createClass({
 The string will now show up on our page. -> Just a proof of concept /delete
 
 
-## Working with Component State
+## 04 Working with Component State
 
 So far our component only has a render function - we will now add a getInitialState function on top:
 
@@ -170,7 +181,7 @@ ReactDOM.render(<TodoComponent />, document.getElementById('todo-wrapper'));
 ```
 
 
-## Using setState to change State of a Component
+## 05 Using setState to change State of a Component
 
 Another proof of concept - will be deleted before the next step.
 
@@ -206,7 +217,7 @@ var TodoComponent = React.createClass({
 ```
 
 
-## Cycling through data
+## 06 Cycling through data
 
 Usually we do not know how many items are inside the InstialState array - lets write a function that works for any array.length
 
@@ -239,7 +250,7 @@ var TodoComponent = React.createClass({
 ```
 
 
-## Nesting Components
+## 07 Nesting Components
 
 We now want to make TodoComponent our parent component to wrap around nested child components, that will build our Todo List. We want to delete the <li>{item}</li> part and substitute it with a child component TodoItem:
 
@@ -289,7 +300,7 @@ var TodoItem = React.createClass({
 ```
 
 
-## Handling Events
+## 08 Handling Events
 
 ### Demo Click-Event Handler
 
@@ -399,7 +410,7 @@ In the onDelete function we set todos item-array to a new variable, filter out a
 When you click the X behind an item, the handleDelete function will fire and set the items value to 'true'. The onDelete function will filter out all items with value 'true' and set the state of todos to the new array - in short 'true' items will be deleted from the array and the component will be re-rendered with the new state.
 
 
-### Modularize
+## 09 Modularize
 
 To keep our code readable, we want to break up each component into a separate module. We create a todoItem.js file next to index.js and cut&paste our TodoItems Component into it. Remember to import 'react' ('react-dom' is not necessary - it is only used to write to DOM... as done in the final line of index.js "ReactDOM.render(<TodoComponent />, document.getElementById('todo-wrapper'));")
 
@@ -438,7 +449,7 @@ import TodoItem from './todoItem';
 ```
 
 
-### Adding styles with Webpack
+## 10 Adding styles with Webpack
 
 We added 'style-loader' and 'css-loader' to our Webpack config before - but haven't installed them yet:
 
