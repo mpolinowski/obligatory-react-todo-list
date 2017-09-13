@@ -1,5 +1,9 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import TodoItem from './todoItem';
+
+import styles from './css/index.css';
 
 // Create component
 var TodoComponent = React.createClass({
@@ -10,12 +14,10 @@ var TodoComponent = React.createClass({
     }
   }, //InitialState
   render: function(){
-    var todos = this.state.todos; // create a local copy of todos array inside function
-    todos = todos.map(function(item, index){ // put each item from todos array into JSX li-tags
-      return(
-        <li>{item}</li>
-      )
-    });
+    var todos = this.state.todos;
+    todos = todos.map(function(item, index){
+      return(<TodoItem key={index} item={item} onDelete={this.onDelete} />)
+    }.bind(this));
     return(
       <div id="todo-list">
         <h1>TODO List</h1>
@@ -24,9 +26,21 @@ var TodoComponent = React.createClass({
           {todos}
         </ul>
       </div>
-    ); // we now reference the local todos variable instead of the this.state.todos
-  } // render
+    );
+  }, // render
+
+  // Custom functions
+  onDelete: function(item){
+    var updatedTodos = this.state.todos.filter(function(value, index){
+      return item !== value;
+    });
+    this.setState({
+      todos: updatedTodos
+    });
+  }
 });
+
+
 
 // Put component into HTML page
 ReactDOM.render(<TodoComponent />, document.getElementById('todo-wrapper'));
