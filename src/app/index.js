@@ -1,19 +1,49 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
+import { render } from 'react-dom';
 
-import TodoItem from './todoItem';
+import{BrowserRouter as Router, Route, NavLink} from 'react-router-dom';
 
 import styles from './css/index.css';
 
+// Imported Modules
+import TodoItem from './todoItem';
+import AddItem from './addItem';
+import About from './about';
+
+const AppLayout = () => (
+  <div className="layout">
+    <header>
+      <h1>Our Todo List</h1>
+      <nav>
+        <NavLink exact to="/" activeStyle={{fontWeight: 'bold', color: 'black'}}>Home </NavLink>
+        <NavLink to="/about" activeStyle={{fontWeight: 'bold', color: 'black'}}> About</NavLink>
+      </nav>
+    </header>
+    <main>
+      <switch>
+        <Route path='/' exact component={TodoComponent} />
+        <Route path='/about' component={About} />
+      </switch>
+    </main>
+  </div>
+)
+
+const App = () => (
+  <Router>
+    <AppLayout />
+  </Router>
+)
+
 // Create component
-var TodoComponent = React.createClass({
-  getInitialState: function(){
-    return {
+class TodoComponent extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {
       todos:['Reply Emails', 'Proof-read Printmanuals', 'Generate new Search-Index', 'drink a cup of coffee'],
       date: '2017-09-11'
-    }
-  }, //InitialState
-  render: function(){
+    };
+  } //InitialState
+  render () {
     var todos = this.state.todos;
     todos = todos.map(function(item, index){
       return(<TodoItem key={index} item={item} onDelete={this.onDelete} />)
@@ -25,12 +55,13 @@ var TodoComponent = React.createClass({
         <ul>
           {todos}
         </ul>
+        <AddItem onAdd={this.onAdd} />
       </div>
     );
-  }, // render
+  } // render
 
   // Custom functions
-  onDelete: function(item){
+  onDelete (item) {
     var updatedTodos = this.state.todos.filter(function(value, index){
       return item !== value;
     });
@@ -38,9 +69,27 @@ var TodoComponent = React.createClass({
       todos: updatedTodos
     });
   }
-});
+  onAdd (item) {
+      var updatedTodos = this.state.todos;
+      updatedTodos.push(item);
+      this.setState({
+        todos: updatedTodos
+      });
+    }
 
+    // lifecycle functions
+      componentWillMount () {
+        console.log('componentWillMount');
+      } // function called directly before component is loaded
+      componentDidMount () {
+        console.log('componentDidMount');
+      }  // function called directly after component is loaded => e.g. grab external DATA
+      componentWillUpdate () {
+        console.log('componentWillUpdate');
+      }
+
+  }
 
 
 // Put component into HTML page
-ReactDOM.render(<TodoComponent />, document.getElementById('todo-wrapper'));
+render(<App />, document.getElementById('todo-wrapper'));

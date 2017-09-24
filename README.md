@@ -1,3 +1,8 @@
+DEPRECATION... this is no longer going to work :( please read a [obligatory-react-todo-list-2017](https://github.com/mpolinowski/obligatory-react-todo-list-2017) for an updated version,
+
+I will keep this example, because it uses react router... but everything else is more interesting in the 2017 example.
+
+
 # React-TODO-List
 Every web-dev should have one or two of them on Github ~
 
@@ -11,7 +16,8 @@ Every web-dev should have one or two of them on Github ~
 08. [Handling Events](#08-handling-events)
 09. [Modularize](#09-modularize)
 10. [Adding styles with Webpack](#10-adding-styles-with-webpack)
-
+11. [Input Refs](#11-input-refs)
+12. [Component Lifecycle Methods](#12-component-lifecycle-methods)
 
 ## 01 Install react, react-dom and babel
 All dependencies will be installed by npm after we initialized the repo (just confirm all defaults):
@@ -530,4 +536,170 @@ and in index.js:
 
 ```
 import styles from './css/index.css';
+```
+
+
+## 11 Input refs
+
+Now we want to add a component that allows us to add items to our TODO list. Add a new file named addItem.js into the app folder:
+
+```js
+import React from 'react';
+
+import styles from './css/addItem.css';
+
+
+// Create AddItem component
+var AddItem = React.createClass({
+  render: function(){
+    return(
+      <form id="add-todo" onSubmit={this.handleSubmit}>
+        <input type="text" required ref="newItem" />
+        <input type="submit" value="Hit me" />
+      </form>
+    );
+  }  
+});
+
+module.exports = AddItem;
+```
+
+And import it to our index.js file:
+
+```js
+import AddItem from './addItem';
+```
+
+So we can reference it inside our TODO list component:
+
+```js
+<div id="todo-list">
+  <h1>TODO List</h1>
+  <h3>{this.state.date}</h3>
+  <ul>
+    {todos}
+  </ul>
+  <AddItem onAdd={this.onAdd} />
+</div>
+```
+
+The onAdd function is added as a custom function below the onDelete function we already created:
+
+```js
+onAdd: function(item){
+  var updatedTodos = this.state.todos;
+  updatedTodos.push(item);
+  this.setState({
+    todos: updatedTodos
+  });
+}
+```
+
+Now we need to add the handleSubmit (already referenced in the AddItem component) custom function to AddItem component:
+
+```js
+handleSubmit: function(e){
+  e.preventDefault();
+  this.props.onAdd(this.refs.newItem.value);
+}
+```
+
+
+## 12 Component Lifecycle Methods
+
+To test lifecycle functions, we will add them to our TodoComponent (below custom functions):
+
+```js
+// lifecycle functions
+
+  componentWillMount: function(){
+    console.log('componentWillMount');
+  }, // function called directly before component is loaded
+
+  componentDidMount: function(){
+    console.log('componentDidMount');
+  },  // function called directly after component is loaded => e.g. grab external DATA
+
+  componentWillUpdate: function(){
+    console.log('componentWillUpdate');
+  } // everything in here will be called once a state change causes a re-render
+```
+
+
+## 13 Router
+
+To add more then one views (pages) to our web app, we need to install react-router
+
+```
+npm install react-router --save
+```
+
+And import the router into our index.js
+
+```js
+import{BrowserRouter as Router, Route, NavLink} from 'react-router-dom';
+```
+
+Now we can add a route for every parent component that we have (so far only TodoComponent) inside index.js:
+
+```js
+const App = React.createClass({
+  render: function(){
+    return(
+      <BrowserRouter>
+          <TodoComponent />
+      </BrowserRouter>
+    );
+  }
+});
+```
+
+Now we need to render <App /> instead of <TodoComponent />
+
+```js
+render(<App />, document.getElementById('todo-wrapper'));
+```
+
+Adding an About view to our app -> add an about.js file inside the app dir:
+
+```js
+import React from 'react';
+
+var About = React.createClass({
+  render: function(){
+    return(
+      <h2>All about me</h2>
+    );
+  }
+});
+
+module.exports = About;
+```
+
+The react router v4 requires us to wrap subroutes into an enclosing component - we will call it <AppLayout />:
+
+```js
+const AppLayout = () => (
+  <div className="layout">
+    <header>
+      <h1>Our Todo List</h1>
+      <nav>
+        <NavLink to="/" exact activeClassName="active">Home /</NavLink>
+        <NavLink to="/about" activeClassName="active"> About</NavLink>
+      </nav>
+    </header>
+    <main>
+      <switch>
+        <Route path='/' exact component={TodoComponent} />
+        <Route path='/about' component={About} />
+      </switch>
+    </main>
+  </div>
+)
+
+const App = () => (
+  <Router>
+    <AppLayout />
+  </Router>
+)
 ```
